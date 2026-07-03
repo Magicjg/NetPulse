@@ -51,20 +51,22 @@ function Write-TrustHelper {
     )
 
     $scriptPath = Join-Path $TargetPath "trust-local-signature.ps1"
-    $scriptContent = @"
-\$certificatePath = Join-Path \$PSScriptRoot '$CertificateFileName'
+    $scriptContent = @'
+$certificatePath = Join-Path $PSScriptRoot "__CERT_FILE__"
 
-if (-not (Test-Path \$certificatePath)) {
-    throw "No se encontro el certificado local: \$certificatePath"
+if (-not (Test-Path $certificatePath)) {
+    throw "No se encontro el certificado local: $certificatePath"
 }
 
-Import-Certificate -FilePath \$certificatePath -CertStoreLocation 'Cert:\CurrentUser\Root' | Out-Null
-Import-Certificate -FilePath \$certificatePath -CertStoreLocation 'Cert:\CurrentUser\TrustedPublisher' | Out-Null
+Import-Certificate -FilePath $certificatePath -CertStoreLocation 'Cert:\CurrentUser\Root' | Out-Null
+Import-Certificate -FilePath $certificatePath -CertStoreLocation 'Cert:\CurrentUser\TrustedPublisher' | Out-Null
 
 Write-Host ""
-Write-Host "Certificado importado en CurrentUser\\Root y CurrentUser\\TrustedPublisher." -ForegroundColor Green
+Write-Host "Certificado importado en CurrentUser\Root y CurrentUser\TrustedPublisher." -ForegroundColor Green
 Write-Host "Ya puedes probar NetPulse.App.exe en esta maquina." -ForegroundColor Green
-"@
+'@
+
+    $scriptContent = $scriptContent.Replace("__CERT_FILE__", $CertificateFileName)
 
     Set-Content -Path $scriptPath -Value $scriptContent -Encoding ASCII
 }
