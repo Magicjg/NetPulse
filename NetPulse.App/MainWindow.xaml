@@ -1,0 +1,554 @@
+<Window x:Class="NetPulse.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="clr-namespace:NetPulse.App.Models"
+        mc:Ignorable="d"
+        Title="NetPulse"
+        Icon="Assets/NetPulseIcon.ico"
+        Width="1360"
+        Height="860"
+        MinWidth="1180"
+        MinHeight="760"
+        Background="{DynamicResource AppBackgroundBrush}">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type models:HistoryItem}">
+            <Border Margin="0,0,0,12"
+                    CornerRadius="18"
+                    Background="{DynamicResource PanelSoftBrush}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="6"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{Binding QualityStripeBrush}" CornerRadius="18,0,0,18"/>
+
+                    <StackPanel Grid.Column="1" Margin="14">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock FontSize="15"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextBrush}"
+                                       Text="{Binding Title}"/>
+                            <TextBlock Grid.Column="1"
+                                       Foreground="{DynamicResource AccentPinkBrush}"
+                                       Text="{Binding TimestampText}"/>
+                        </Grid>
+
+                        <TextBlock Margin="0,6,0,0"
+                                   Foreground="{DynamicResource AccentBrush}"
+                                   Text="{Binding DetailText}"
+                                   TextWrapping="Wrap"/>
+
+                        <WrapPanel Margin="0,12,0,0">
+                        <Border Margin="0,0,8,8"
+                                Padding="10,5"
+                                CornerRadius="999"
+                                Background="{DynamicResource ChipNeutralBrush}">
+                            <TextBlock Foreground="{DynamicResource WarningBrush}"
+                                       Text="{Binding QualityText}"/>
+                        </Border>
+                        <Border Margin="0,0,8,8"
+                                Padding="10,5"
+                                CornerRadius="999"
+                                Background="{DynamicResource ChipNeutralBrush}">
+                            <TextBlock Foreground="{DynamicResource TextBrush}"
+                                       Text="{Binding PingText}"/>
+                        </Border>
+                        <Border Margin="0,0,8,8"
+                                Padding="10,5"
+                                CornerRadius="999"
+                                Background="{DynamicResource ChipAccentBrush}">
+                            <TextBlock Foreground="{DynamicResource AccentBrush}"
+                                       Text="{Binding DownloadText}"/>
+                        </Border>
+                        <Border Margin="0,0,0,8"
+                                Padding="10,5"
+                                CornerRadius="999"
+                                Background="{DynamicResource ChipAltBrush}">
+                            <TextBlock Foreground="{DynamicResource AccentAltBrush}"
+                                       Text="{Binding UploadText}"/>
+                        </Border>
+                        </WrapPanel>
+
+                        <TextBlock Margin="0,6,0,0"
+                                   Foreground="{DynamicResource MutedBrush}"
+                                   Text="{Binding Summary}"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </Window.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="22">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="18"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0"
+                    Padding="32"
+                    CornerRadius="30"
+                    Background="{DynamicResource HeroGradientBrush}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.2*"/>
+                        <ColumnDefinition Width="26"/>
+                        <ColumnDefinition Width="0.95*"/>
+                        <ColumnDefinition Width="26"/>
+                        <ColumnDefinition Width="360"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel>
+                        <Border Width="150"
+                                Padding="12,6"
+                                HorizontalAlignment="Left"
+                                Background="{DynamicResource AccentSoftBrush}"
+                                CornerRadius="999">
+                            <TextBlock HorizontalAlignment="Center"
+                                       Foreground="{DynamicResource AccentBrush}"
+                                       Text="{Binding HeroBadgeText}"/>
+                        </Border>
+
+                        <StackPanel Margin="0,18,0,0" Orientation="Horizontal">
+                            <Border Width="72"
+                                    Height="72"
+                                    Padding="8"
+                                    VerticalAlignment="Center"
+                                    Background="{DynamicResource PanelBrush}"
+                                    BorderBrush="{DynamicResource PanelBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="22">
+                                <Image Stretch="Uniform"
+                                       Source="Assets/NetPulseLogo.png"/>
+                            </Border>
+                            <TextBlock Margin="18,0,0,0"
+                                       VerticalAlignment="Center"
+                                       FontSize="44"
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource TextBrush}"
+                                       Text="{Binding AppTitle}"/>
+                        </StackPanel>
+                        <TextBlock Margin="0,12,0,0"
+                                   FontSize="18"
+                                   Foreground="{DynamicResource MutedBrush}"
+                                   Text="{Binding AppSubtitle}"
+                                   TextWrapping="Wrap"/>
+                        <TextBlock Margin="0,22,0,0"
+                                   FontSize="14"
+                                   Foreground="{DynamicResource TextBrush}"
+                                   Text="{Binding StatusText}"
+                                   TextWrapping="Wrap"/>
+
+                        <StackPanel Margin="0,26,0,0" Orientation="Horizontal">
+                            <Button Command="{Binding StartTestCommand}"
+                                    Content="{Binding StartButtonText}"
+                                    Style="{StaticResource HeroPrimaryButtonStyle}"/>
+                            <Button Margin="12,0,0,0"
+                                    Command="{Binding CancelTestCommand}"
+                                    Content="Cancelar"
+                                    Style="{StaticResource HeroSecondaryButtonStyle}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <Border Grid.Column="2"
+                            Padding="22"
+                            CornerRadius="24"
+                            Background="{DynamicResource SummaryPanelBrush}"
+                            BorderBrush="{DynamicResource PanelBorderBrush}"
+                            BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock FontSize="16"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextBrush}"
+                                       Text="Resumen rapido"/>
+                            <Grid Margin="0,18,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="12"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="12"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Row="0"
+                                        Grid.Column="0"
+                                        Padding="16"
+                                        CornerRadius="18"
+                                        Background="{DynamicResource PanelSoftBrush}">
+                                    <StackPanel>
+                                        <TextBlock Foreground="{DynamicResource MutedBrush}" Text="Download"/>
+                                        <TextBlock Margin="0,8,0,0"
+                                                   FontSize="28"
+                                                   FontWeight="Bold"
+                                                   Foreground="{DynamicResource AccentBrush}"
+                                                   Text="{Binding AnimatedDownloadValueDisplay}"/>
+                                        <TextBlock Margin="0,4,0,0"
+                                                   Foreground="{DynamicResource MutedBrush}"
+                                                   Text="Mbps"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Grid.Row="0"
+                                        Grid.Column="2"
+                                        Padding="16"
+                                        CornerRadius="18"
+                                        Background="{DynamicResource PanelSoftBrush}">
+                                    <StackPanel>
+                                        <TextBlock Foreground="{DynamicResource MutedBrush}" Text="Upload"/>
+                                        <TextBlock Margin="0,8,0,0"
+                                                   FontSize="28"
+                                                   FontWeight="Bold"
+                                                   Foreground="{DynamicResource AccentAltBrush}"
+                                                   Text="{Binding AnimatedUploadValueDisplay}"/>
+                                        <TextBlock Margin="0,4,0,0"
+                                                   Foreground="{DynamicResource MutedBrush}"
+                                                   Text="Mbps"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Grid.Row="2"
+                                        Grid.Column="0"
+                                        Padding="16"
+                                        CornerRadius="18"
+                                        Background="{DynamicResource PanelSoftBrush}">
+                                    <StackPanel>
+                                        <TextBlock Foreground="{DynamicResource MutedBrush}" Text="Ping"/>
+                                        <TextBlock Margin="0,8,0,0"
+                                                   FontSize="28"
+                                                   FontWeight="Bold"
+                                                   Foreground="{DynamicResource TextBrush}"
+                                                   Text="{Binding AnimatedPingValueDisplay}"/>
+                                        <TextBlock Margin="0,4,0,0"
+                                                   Foreground="{DynamicResource MutedBrush}"
+                                                   Text="ms"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Grid.Row="2"
+                                        Grid.Column="2"
+                                        Padding="16"
+                                        CornerRadius="18"
+                                        Background="{DynamicResource PanelSoftBrush}">
+                                    <StackPanel>
+                                        <TextBlock Foreground="{DynamicResource MutedBrush}" Text="Jitter"/>
+                                        <TextBlock Margin="0,8,0,0"
+                                                   FontSize="28"
+                                                   FontWeight="Bold"
+                                                   Foreground="{DynamicResource TextBrush}"
+                                                   Text="{Binding AnimatedJitterValueDisplay}"/>
+                                        <TextBlock Margin="0,4,0,0"
+                                                   Foreground="{DynamicResource MutedBrush}"
+                                                   Text="ms"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="4"
+                            Style="{StaticResource CardBorderStyle}"
+                            Background="{DynamicResource SourcePanelBrush}">
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock FontSize="16"
+                                           FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextBrush}"
+                                           Text="Fuente de la medicion"/>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Margin="0,0,10,0"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource MutedBrush}"
+                                               Text="Tema"/>
+                                    <ToggleButton IsChecked="{Binding IsDarkTheme, Mode=TwoWay}"
+                                                  Style="{StaticResource ThemeToggleStyle}"/>
+                                </StackPanel>
+                            </Grid>
+                            <Border Margin="0,16,0,0"
+                                    Padding="14"
+                                    CornerRadius="16"
+                                    Background="{DynamicResource PanelSoftBrush}">
+                                <StackPanel>
+                                    <TextBlock Foreground="{DynamicResource AccentBrush}"
+                                               Text="{Binding ProviderText}"
+                                               TextWrapping="Wrap"/>
+                                    <TextBlock Margin="0,8,0,0"
+                                               Foreground="{DynamicResource TextBrush}"
+                                               Text="{Binding IspText}"
+                                               TextWrapping="Wrap"/>
+                                    <TextBlock Margin="0,8,0,0"
+                                               Foreground="{DynamicResource MutedBrush}"
+                                               Text="{Binding ServerText}"
+                                               TextWrapping="Wrap"/>
+                                    <Button Margin="0,14,0,0"
+                                            HorizontalAlignment="Left"
+                                            Command="{Binding OpenResultCommand}"
+                                            Content="{Binding ResultLinkText}"
+                                            Style="{StaticResource SecondaryButtonStyle}"/>
+                                </StackPanel>
+                            </Border>
+                            <TextBlock Margin="0,16,0,0"
+                                       Foreground="{DynamicResource MutedBrush}"
+                                       Text="{Binding ThemeDescriptionText}"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.45*"/>
+                    <ColumnDefinition Width="18"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0"
+                        VerticalAlignment="Top"
+                        Style="{StaticResource CardBorderStyle}">
+                    <StackPanel>
+                        <TextBlock FontSize="28"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource TextBrush}"
+                                   Text="Lectura analitica"/>
+                        <TextBlock Margin="0,10,0,0"
+                                   FontSize="14"
+                                   Foreground="{DynamicResource MutedBrush}"
+                                   Text="Aqui vive el contexto de la ultima prueba: estado, calidad, origen y trazabilidad del resultado."
+                                   TextWrapping="Wrap"/>
+
+                        <Grid Margin="0,24,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0"
+                                    Padding="24"
+                                    CornerRadius="24"
+                                    Background="{DynamicResource PanelSoftBrush}">
+                                <StackPanel>
+                                    <TextBlock FontSize="18"
+                                               FontWeight="SemiBold"
+                                               Foreground="{DynamicResource TextBrush}"
+                                               Text="Estado de la medicion"/>
+
+                                    <TextBlock Margin="0,18,0,0"
+                                               FontSize="22"
+                                               FontWeight="SemiBold"
+                                               Foreground="{Binding ProgressAccentBrush}"
+                                               Text="{Binding CurrentPhase}"
+                                               TextWrapping="Wrap"/>
+                                    <ProgressBar Margin="0,18,0,0"
+                                                 Foreground="{Binding ProgressAccentBrush}"
+                                                 Maximum="100"
+                                                 Tag="{Binding IsTesting}"
+                                                 Style="{StaticResource AnimatedProgressBarStyle}"
+                                                 Value="{Binding ProgressPercent, Mode=OneWay}"/>
+                                    <Grid Margin="0,14,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="14"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Border Padding="16,10"
+                                                CornerRadius="18"
+                                                Background="{DynamicResource PanelBrush}"
+                                                BorderBrush="{DynamicResource PanelBorderBrush}"
+                                                BorderThickness="1">
+                                            <StackPanel>
+                                                <TextBlock Foreground="{DynamicResource MutedBrush}"
+                                                           Text="Avance"/>
+                                                <TextBlock Margin="0,4,0,0"
+                                                           FontSize="26"
+                                                           FontWeight="Bold"
+                                                           Foreground="{Binding ProgressAccentBrush}"
+                                                           Text="{Binding ProgressText}"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <Border Grid.Column="2"
+                                                Padding="12,8"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                CornerRadius="999"
+                                                Background="{DynamicResource PanelBrush}"
+                                                BorderBrush="{DynamicResource PanelBorderBrush}"
+                                                BorderThickness="1">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Ellipse Width="10"
+                                                         Height="10"
+                                                         Margin="0,0,10,0"
+                                                         VerticalAlignment="Center"
+                                                         Fill="{Binding ProgressAccentBrush}"/>
+                                                <TextBlock Foreground="{Binding ProgressAccentBrush}"
+                                                           FontWeight="SemiBold"
+                                                           Text="{Binding CurrentPhase}"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                    <Border Margin="0,18,0,0"
+                                            Padding="16"
+                                            CornerRadius="18"
+                                            Background="{DynamicResource PanelBrush}"
+                                            BorderBrush="{Binding QualityAccentBrush}"
+                                            BorderThickness="1.5">
+                                        <StackPanel>
+                                            <TextBlock Foreground="{DynamicResource MutedBrush}" Text="Calidad detectada"/>
+                                            <TextBlock Margin="0,8,0,0"
+                                                       FontSize="28"
+                                                       FontWeight="Bold"
+                                                       Foreground="{Binding QualityAccentBrush}"
+                                                       Text="{Binding QualityLabel}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Grid.Column="2"
+                                    Padding="24"
+                                    CornerRadius="24"
+                                    Background="{DynamicResource PanelSoftBrush}">
+                                <StackPanel>
+                                    <TextBlock FontSize="18"
+                                               FontWeight="SemiBold"
+                                               Foreground="{DynamicResource TextBrush}"
+                                               Text="Origen y trazabilidad"/>
+                                    <Border Margin="0,18,0,0"
+                                            Padding="16"
+                                            CornerRadius="18"
+                                            Background="{DynamicResource PanelBrush}">
+                                        <StackPanel>
+                                            <TextBlock Foreground="{DynamicResource AccentBrush}"
+                                                       Text="{Binding ProviderText}"
+                                                       TextWrapping="Wrap"/>
+                                            <TextBlock Margin="0,8,0,0"
+                                                       Foreground="{DynamicResource TextBrush}"
+                                                       Text="{Binding IspText}"
+                                                       TextWrapping="Wrap"/>
+                                            <TextBlock Margin="0,8,0,0"
+                                                       Foreground="{DynamicResource MutedBrush}"
+                                                       Text="{Binding ServerText}"
+                                                       TextWrapping="Wrap"/>
+                                            <Button Margin="0,14,0,0"
+                                                    HorizontalAlignment="Left"
+                                                    Command="{Binding OpenResultCommand}"
+                                                    Content="{Binding ResultLinkText}"
+                                                    Style="{StaticResource SecondaryButtonStyle}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Margin="0,18,0,0"
+                                               Foreground="{DynamicResource MutedBrush}"
+                                               Text="Usa esta zona para validar de donde salio la prueba y abrir el resultado publico si quieres contrastarlo."
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2"
+                        VerticalAlignment="Top"
+                        MinWidth="430"
+                        MaxWidth="520"
+                        Style="{StaticResource CardBorderStyle}">
+                    <StackPanel>
+                        <TextBlock FontSize="24"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource TextBrush}"
+                                   Text="Historial reciente"/>
+                        <TextBlock Margin="0,10,0,0"
+                                   Foreground="{DynamicResource MutedBrush}"
+                                   Text="Las pruebas nuevas aparecen arriba para comparar rapido sin saturar la pantalla principal."
+                                   TextWrapping="Wrap"/>
+                        <WrapPanel Margin="0,18,0,0" ItemWidth="122" Orientation="Horizontal">
+                            <Border Width="122"
+                                    Margin="0,0,10,10"
+                                    Padding="12"
+                                    CornerRadius="16"
+                                    Background="{DynamicResource PanelSoftBrush}">
+                                <StackPanel>
+                                    <TextBlock Foreground="{DynamicResource MutedBrush}" Text="Total"/>
+                                    <TextBlock Margin="0,6,0,0"
+                                               FontSize="20"
+                                               FontWeight="Bold"
+                                               Foreground="{DynamicResource TextBrush}"
+                                               Text="{Binding HistoryCountText}"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Width="122"
+                                    Margin="0,0,10,10"
+                                    Padding="12"
+                                    CornerRadius="16"
+                                    Background="{DynamicResource PanelSoftBrush}">
+                                <StackPanel>
+                                    <TextBlock Foreground="{DynamicResource MutedBrush}" Text="Ultima"/>
+                                    <TextBlock Margin="0,6,0,0"
+                                               FontSize="20"
+                                               FontWeight="Bold"
+                                               Foreground="{DynamicResource AccentBrush}"
+                                               Text="{Binding LatestHistoryText}"/>
+                                    <TextBlock Margin="0,2,0,0"
+                                               Foreground="{DynamicResource MutedBrush}"
+                                               Text="Mbps"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Width="122"
+                                    Margin="0,0,0,10"
+                                    Padding="12"
+                                    CornerRadius="16"
+                                    Background="{DynamicResource PanelSoftBrush}">
+                                <StackPanel>
+                                    <TextBlock Foreground="{DynamicResource MutedBrush}" Text="Mejor"/>
+                                    <TextBlock Margin="0,6,0,0"
+                                               FontSize="20"
+                                               FontWeight="Bold"
+                                               Foreground="{DynamicResource AccentAltBrush}"
+                                               Text="{Binding BestDownloadText}"/>
+                                    <TextBlock Margin="0,2,0,0"
+                                               Foreground="{DynamicResource MutedBrush}"
+                                               Text="Mbps"/>
+                                </StackPanel>
+                            </Border>
+                        </WrapPanel>
+                        <ScrollViewer Margin="0,18,0,0"
+                                      VerticalScrollBarVisibility="Auto"
+                                      Height="320">
+                            <ItemsControl ItemsSource="{Binding History}"/>
+                        </ScrollViewer>
+                        <TextBlock Margin="0,14,0,0"
+                                   Foreground="{DynamicResource MutedBrush}"
+                                   Text="{Binding HistoryEmptyText}"
+                                   TextWrapping="Wrap"/>
+                        <Button Margin="0,14,0,0"
+                                HorizontalAlignment="Left"
+                                Command="{Binding ClearHistoryCommand}"
+                                Content="Limpiar historial"
+                                Style="{StaticResource SecondaryButtonStyle}"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</Window>
