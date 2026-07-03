@@ -6,7 +6,6 @@
         xmlns:models="clr-namespace:NetPulse.App.Models"
         mc:Ignorable="d"
         Title="NetPulse"
-        Icon="Assets/NetPulseIcon.ico"
         Width="1360"
         Height="860"
         MinWidth="1180"

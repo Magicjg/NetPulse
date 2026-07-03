@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\NetPulseIcon.ico" />
     <Resource Include="Assets\NetPulseLogo.png" />
   </ItemGroup>
 
