@@ -53,6 +53,11 @@ NetPulse/
 
 ## Uso rapido
 
+## Descargas
+
+- Repositorio: `https://github.com/Magicjg/NetPulse`
+- Release Windows x64: usa la seccion `Releases` del repo para bajar `NetPulse-win-x64.zip`
+
 ### Preview local
 
 ```powershell
