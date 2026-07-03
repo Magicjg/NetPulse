@@ -92,14 +92,15 @@ Esto publica la app en `%LOCALAPPDATA%\NetPulsePreview`, crea o reutiliza un cer
 powershell -ExecutionPolicy Bypass -File .\publish-release.ps1
 ```
 
-Esto genera un release en `dist\NetPulse-win-x64` y firma el ejecutable para esta misma maquina.
-Tambien crea `dist\NetPulse-win-x64.zip` listo para mover o respaldar.
+Esto genera un release `self-contained` en `dist\NetPulse-win-x64`, asi que no depende de tener `.NET` instalado.
+Tambien firma el ejecutable para esta misma maquina y crea `dist\NetPulse-win-x64.zip` listo para mover o respaldar.
 
 ## Nota sobre la firma
 
 - La maquina tiene `Smart App Control / Code Integrity` activo.
 - Un `exe` sin firma es bloqueado aunque el proyecto compile bien.
 - La firma local resuelve el uso en esta PC porque agrega un certificado de desarrollo a `CurrentUser`.
+- El release incluye `NetPulseLocalDev.cer` y `trust-local-signature.ps1` para confiar la firma local en esta maquina si hace falta.
 - Para distribuir la app a otras PCs sin friccion hace falta un certificado de firma de codigo confiable o una politica del equipo que permita la app.
 
 ## Siguiente fase

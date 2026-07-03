@@ -42,6 +42,33 @@ function Sign-PublishedFiles {
         }
 }
 
+function Write-TrustHelper {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$TargetPath,
+        [Parameter(Mandatory = $true)]
+        [string]$CertificateFileName
+    )
+
+    $scriptPath = Join-Path $TargetPath "trust-local-signature.ps1"
+    $scriptContent = @"
+\$certificatePath = Join-Path \$PSScriptRoot '$CertificateFileName'
+
+if (-not (Test-Path \$certificatePath)) {
+    throw "No se encontro el certificado local: \$certificatePath"
+}
+
+Import-Certificate -FilePath \$certificatePath -CertStoreLocation 'Cert:\CurrentUser\Root' | Out-Null
+Import-Certificate -FilePath \$certificatePath -CertStoreLocation 'Cert:\CurrentUser\TrustedPublisher' | Out-Null
+
+Write-Host ""
+Write-Host "Certificado importado en CurrentUser\\Root y CurrentUser\\TrustedPublisher." -ForegroundColor Green
+Write-Host "Ya puedes probar NetPulse.App.exe en esta maquina." -ForegroundColor Green
+"@
+
+    Set-Content -Path $scriptPath -Value $scriptContent -Encoding ASCII
+}
+
 if (-not (Test-Path $dotnetPath)) {
     throw ".NET no esta instalado en la ruta esperada: $dotnetPath"
 }
@@ -56,7 +83,7 @@ if (Test-Path $zipPath) {
 
 New-Item -ItemType Directory -Path $outputPath | Out-Null
 
-& $dotnetPath publish $projectPath -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o $outputPath
+& $dotnetPath publish $projectPath -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o $outputPath
 
 if ($LASTEXITCODE -ne 0) {
     throw "No se pudo publicar el release de NetPulse."
@@ -64,6 +91,9 @@ if ($LASTEXITCODE -ne 0) {
 
 $certificate = Get-OrCreateCodeSigningCertificate
 Sign-PublishedFiles -TargetPath $outputPath -Certificate $certificate
+$certificateExportPath = Join-Path $outputPath "NetPulseLocalDev.cer"
+Export-Certificate -Cert $certificate -FilePath $certificateExportPath | Out-Null
+Write-TrustHelper -TargetPath $outputPath -CertificateFileName "NetPulseLocalDev.cer"
 Compress-Archive -Path (Join-Path $outputPath '*') -DestinationPath $zipPath
 
 Write-Host ""
