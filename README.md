@@ -76,7 +76,9 @@ NetPulse/
 ## Descargas
 
 - Repositorio: `https://github.com/Magicjg/NetPulse`
-- Release Windows x64: usa la seccion `Releases` del repo para bajar `NetPulse-win-x64.zip`
+- Ultima release estable: `v0.1.1`
+- Release Windows x64: `https://github.com/Magicjg/NetPulse/releases/download/v0.1.1/NetPulse-win-x64.zip`
+- Historial de cambios: revisa [CHANGELOG.md](CHANGELOG.md)
 
 ### Preview local
 
