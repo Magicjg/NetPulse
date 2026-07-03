@@ -71,6 +71,59 @@ Write-Host "Ya puedes probar NetPulse.App.exe en esta maquina." -ForegroundColor
     Set-Content -Path $scriptPath -Value $scriptContent -Encoding ASCII
 }
 
+function Write-TrustLauncher {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$TargetPath
+    )
+
+    $cmdPath = Join-Path $TargetPath "trust-local-signature.cmd"
+    $cmdContent = @'
+@echo off
+setlocal
+set SCRIPT_DIR=%~dp0
+
+powershell -ExecutionPolicy Bypass -File "%SCRIPT_DIR%trust-local-signature.ps1"
+if errorlevel 1 (
+  echo.
+  echo No se pudo importar el certificado local.
+  pause
+  exit /b 1
+)
+
+echo.
+echo Certificado importado correctamente.
+pause
+'@
+
+    Set-Content -Path $cmdPath -Value $cmdContent -Encoding ASCII
+
+    $runCmdPath = Join-Path $TargetPath "trust-and-run-NetPulse.cmd"
+    $runCmdContent = @'
+@echo off
+setlocal
+set SCRIPT_DIR=%~dp0
+
+powershell -ExecutionPolicy Bypass -File "%SCRIPT_DIR%trust-local-signature.ps1"
+if errorlevel 1 (
+  echo.
+  echo No se pudo importar el certificado local.
+  pause
+  exit /b 1
+)
+
+start "" "%SCRIPT_DIR%NetPulse.App.exe"
+if errorlevel 1 (
+  echo.
+  echo No se pudo abrir NetPulse.App.exe.
+  pause
+  exit /b 1
+)
+'@
+
+    Set-Content -Path $runCmdPath -Value $runCmdContent -Encoding ASCII
+}
+
 if (-not (Test-Path $dotnetPath)) {
     throw ".NET no esta instalado en la ruta esperada: $dotnetPath"
 }
@@ -96,6 +149,7 @@ Sign-PublishedFiles -TargetPath $outputPath -Certificate $certificate
 $certificateExportPath = Join-Path $outputPath "NetPulseLocalDev.cer"
 Export-Certificate -Cert $certificate -FilePath $certificateExportPath | Out-Null
 Write-TrustHelper -TargetPath $outputPath -CertificateFileName "NetPulseLocalDev.cer"
+Write-TrustLauncher -TargetPath $outputPath
 Compress-Archive -Path (Join-Path $outputPath '*') -DestinationPath $zipPath
 
 Write-Host ""

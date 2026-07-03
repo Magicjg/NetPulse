@@ -100,7 +100,8 @@ Tambien firma el ejecutable para esta misma maquina y crea `dist\NetPulse-win-x6
 - La maquina tiene `Smart App Control / Code Integrity` activo.
 - Un `exe` sin firma es bloqueado aunque el proyecto compile bien.
 - La firma local resuelve el uso en esta PC porque agrega un certificado de desarrollo a `CurrentUser`.
-- El release incluye `NetPulseLocalDev.cer` y `trust-local-signature.ps1` para confiar la firma local en esta maquina si hace falta.
+- El release incluye `NetPulseLocalDev.cer`, `trust-local-signature.ps1`, `trust-local-signature.cmd` y `trust-and-run-NetPulse.cmd`.
+- Si el `exe` no abre al primer intento, usa `trust-and-run-NetPulse.cmd`.
 - Para distribuir la app a otras PCs sin friccion hace falta un certificado de firma de codigo confiable o una politica del equipo que permita la app.
 
 ## Siguiente fase
