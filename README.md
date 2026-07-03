@@ -10,6 +10,16 @@ Medidor de velocidad de internet para Windows con enfoque visual, moderno y list
 - `WPF`
 - `.NET 8`
 
+## Visuales
+
+### Modo oscuro
+
+![NetPulse dark theme](NetPulse.App/Assets/NetPulseThemeDark.png)
+
+### Modo claro
+
+![NetPulse light theme](NetPulse.App/Assets/NetPulseThemeLight.png)
+
 ## Objetivo del producto
 
 NetPulse busca medir y presentar de forma amigable:
@@ -20,6 +30,16 @@ NetPulse busca medir y presentar de forma amigable:
 - `Upload`
 - historial local de resultados
 - indicadores visuales de calidad de red
+
+## Funcionalidades
+
+| Area | Incluye |
+| --- | --- |
+| Medicion real | `Ping`, `jitter`, `download` y `upload` usando `Ookla Speedtest CLI` |
+| UI | tema oscuro y claro, tarjetas animadas y barra de progreso visual |
+| Historial | persistencia local, resumen rapido y limpieza de historial |
+| Branding | logo, icono de Windows y assets para presentacion del proyecto |
+| Release | scripts para preview, release firmado localmente y zip listo para descargar |
 
 ## Estado actual
 
